@@ -1,7 +1,7 @@
 # InstantBuild mod
 
 ## Description
-InstantBuild is a mod for __Green Hell__ that allows the player to instantly construct blueprints and finish the ones that are already placed.
+InstantBuild is a mod for __Green Hell__ that allows the player to instantly build blueprints and finish the ones that are already placed.
 
 
 ----
