@@ -7,7 +7,7 @@ using UnityEngine;
 namespace InstantBuild
 {
     /// <summary>
-    /// InstantBuild is mod for Green Hell that allows the player to instantly construct blueprints and finish the ones that are already placed.
+    /// InstantBuild is mod for Green Hell that allows the player to instantly build blueprints and finish the ones that are already placed.
     /// Usage: Simply press the shortcut to open settings window (by default it is NumPad8).
     /// Author: OSubMarin
     /// </summary>
@@ -339,7 +339,7 @@ namespace InstantBuild
                     GUILayout.Space(15.0f);
                     FinishBlueprintsEnabled = GUILayout.Toggle(FinishBlueprintsEnabled, "Enable \"finish existing blueprints\" shortcut?", GUI.skin.toggle);
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label($"Shortcut \"{ModKeybindingId_Finish.ToString()}\" will finish building ", descriptionStyle);
+                    GUILayout.Label($"Shortcut \"{ModKeybindingId_Finish.ToString()}\" will instantly build ", descriptionStyle);
                     GUILayout.Label("already placed blueprints", boldDescriptionStyle);
                     GUILayout.Label(".", descriptionStyle);
                     GUILayout.FlexibleSpace();
