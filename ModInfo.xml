@@ -1,0 +1,26 @@
+<Mod ID="InstantBuild">
+  <Compatible>2.3.5</Compatible>
+  <Button Standard="NumPad8" ID="ShowSettings">
+    <Name>
+      <EN>Show settings</EN>
+    </Name>
+    <Description>
+      <EN>This shortcut displays the settings window.</EN>
+    </Description>
+  </Button>
+  <Button Standard="NumPad9" ID="FinishBlueprints">
+    <Name>
+      <EN>Finish blueprints</EN>
+    </Name>
+    <Description>
+      <EN>This shortcut will instantly build existing blueprints nearby (within a 20 meters radius by default).</EN>
+    </Description>
+  </Button>
+  <Name>
+    <EN>InstantBuild</EN>
+  </Name>
+  <Description>
+    <EN>InstantBuild is a mod for Green Hell that allows the player to instantly construct blueprints and finish the ones that are already placed. Author: OSubMarin</EN>
+  </Description>
+  <Version>1.0.0.0</Version>
+</Mod>
