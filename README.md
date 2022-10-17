@@ -18,3 +18,11 @@ If you don't have ModAPI yet you can get it here: [https://modapi.survivethefore
 
 ## Usage
 Simply press the shortcut to open settings window in game (by default it is __NumPad8__).
+
+
+----
+
+
+## Support
+You can get help from the ModAPI community at https://discord.gg/VAMuXyd or you can contact me on Discord if needed (OSubMarin#0460).
+
