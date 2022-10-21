@@ -13,7 +13,7 @@
       <EN>Finish blueprints</EN>
     </Name>
     <Description>
-      <EN>This shortcut will instantly build existing blueprints nearby (within a 20 meters radius by default).</EN>
+      <EN>This shortcut instantly builds existing blueprints nearby (within a 20 meters radius by default).</EN>
     </Description>
   </Button>
   <Name>

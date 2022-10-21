@@ -7,7 +7,7 @@ using UnityEngine;
 namespace InstantBuild
 {
     /// <summary>
-    /// InstantBuild is mod for Green Hell that allows the player to instantly build blueprints and finish the ones that are already placed.
+    /// InstantBuild is a mod for Green Hell that allows the player to instantly build blueprints and finish the ones that are already placed.
     /// Usage: Simply press the shortcut to open settings window (by default it is NumPad8).
     /// Author: OSubMarin
     /// </summary>
@@ -277,7 +277,7 @@ namespace InstantBuild
             InstantBuildScreen = GUILayout.Window(wid,
                 InstantBuildScreen,
                 InitInstantBuildScreen,
-                "Instant Build mod v1.0, by OSubMarin",
+                "Instant Build mod v1.0.0.1, by OSubMarin",
                 GUI.skin.window,
                 GUILayout.ExpandWidth(true),
                 GUILayout.MinWidth(ModScreenMinWidth),
@@ -382,10 +382,10 @@ namespace InstantBuild
                     }
                     if (FinishBlueprintsEnabled)
                     {
-                        GUILayout.Space(15.0f);
+                        GUILayout.Space(5.0f);
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Finish blueprints radius: ", GUI.skin.label);
-                        BlueprintRadiusFinishField = GUILayout.TextField(BlueprintRadiusFinishField, 10, GUI.skin.textField, GUILayout.MinWidth(150.0f));
+                        BlueprintRadiusFinishField = GUILayout.TextField(BlueprintRadiusFinishField, 10, GUI.skin.textField, GUILayout.MinWidth(100.0f));
                         GUILayout.Label(" meters", GUI.skin.label);
                         GUILayout.FlexibleSpace();
                         GUILayout.EndHorizontal();
