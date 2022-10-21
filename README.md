@@ -28,5 +28,5 @@ When in game simply press the shortcut to open settings window (by default it is
 ----
 
 ## Support
-You can get help from the ModAPI community at https://discord.gg/VAMuXyd or you can contact me on Discord if needed (OSubMarin#0460).
+You can get help from the ModAPI community at [https://discord.gg/VAMuXyd](https://discord.gg/VAMuXyd) or you can contact me on Discord if needed (OSubMarin#0460).
 
