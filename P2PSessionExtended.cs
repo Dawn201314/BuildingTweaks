@@ -13,7 +13,7 @@ namespace InstantBuild
                 {
                     InstantBuild.WaitAMinBeforeFirstRequest = DateTime.Now.Ticks / 10000000L;
 #if VERBOSE
-					ModAPI.Log.Write($"[{InstantBuild.ModName}:P2PSessionExtended.OnConnected] Setting initial instant build state from P2PNetworkManagerExtended.OnConnected.");
+                    ModAPI.Log.Write($"[{InstantBuild.ModName}:P2PSessionExtended.OnConnected] Setting initial instant build state from P2PNetworkManagerExtended.OnConnected.");
 #endif
                     InstantBuild.SetInstantBuildInitialState();
                 }

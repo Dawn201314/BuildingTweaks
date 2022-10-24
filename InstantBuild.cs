@@ -162,7 +162,7 @@ namespace InstantBuild
                 bool hasPermission = (InstantBuild.PermissionGranted && !InstantBuild.PermissionDenied);
                 Cheats.m_InstantBuild = (isSingleplayerOrMaster || hasPermission);
 #if VERBOSE
-                if (Cheats.m_InstantBuild )
+                if (Cheats.m_InstantBuild)
                     ModAPI.Log.Write($"[{ModName}:SetInstantBuildInitialState] Instant build feature has been enabled.");
                 else
                     ModAPI.Log.Write($"[{ModName}:SetInstantBuildInitialState] Could not enable instant build feature ({(!isSingleplayerOrMaster ? "no permission" : "only available if you are the host or in singleplayer mode")}).");
