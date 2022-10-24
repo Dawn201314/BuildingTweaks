@@ -30,6 +30,14 @@ The host doesn't need to install any mods (it works even if the host doesn't hav
 
 ----
 
+## Changelogs
+__v1.0.0.4__: It is now possible to enable "Instant build" feature and "Finish blueprints" shortcut at the same time.
+
+__v1.0.0.2__: Now works in multiplayer when you are not the host (open settings window and click on "__Ask permission__" button).
+
+
+----
+
 ## Preview
 [https://i.imgur.com/ouKXI3y.png](https://i.imgur.com/ouKXI3y.png)
 ![Instant Build preview](https://i.imgur.com/ouKXI3y.png)
