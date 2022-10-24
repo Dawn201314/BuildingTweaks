@@ -20,7 +20,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     
@@ -326,7 +325,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConstructionGhostExtended.cs"  />
+<Compile Include="HUDTextChatExtended.cs"  />
+<Compile Include="HUDTextChatHistoryExtended.cs"  />
 <Compile Include="InstantBuild.cs"  />
+<Compile Include="P2PSessionExtended.cs"  />
 <Compile Include="PlayerExtended.cs"  />
 <Compile Include="Properties\AssemblyInfo.cs"  />
 
