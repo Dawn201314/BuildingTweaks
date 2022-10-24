@@ -44,6 +44,11 @@ __v1.0.0.2__: Now works in multiplayer when you are not the host (open settings 
 
 ----
 
+## Contributors
+Big thanks to slik/P for mod testing.
+
+----
+
 ## Support
 You can get help from the ModAPI community at [https://discord.gg/VAMuXyd](https://discord.gg/VAMuXyd) or you can contact me on Discord if needed (OSubMarin#0460).
 
