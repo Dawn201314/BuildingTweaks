@@ -3,8 +3,6 @@
 ## Description
 __Instant Build__ is a mod for __Green Hell__ that allows the player to instantly build blueprints and finish the ones that are already placed.
 
-Note that this mod only works if you are the host or in singleplayer mode.
-
 ----
 
 ## Install
@@ -16,8 +14,19 @@ Go to [https://modapi.survivetheforest.net/game/GH/](https://modapi.survivethefo
 
 ----
 
-## Usage
+This mod does not require any additional mods to work properly.
+
+----
+
+## Usage for singleplayer or host
 When in game simply press the shortcut to open settings window (by default it is __NumPad8__).
+
+## Usage for multiplayer when you are not the host
+Open settings window (by default it is __NumPad8__) then click "__Ask permission__" button.
+
+If the host answers "__Allowed__" (without quotes) in the chat you will be granted permission to use the mod.
+
+The host doesn't need to install any mods (it works even if the host doesn't have ModAPI).
 
 ----
 
