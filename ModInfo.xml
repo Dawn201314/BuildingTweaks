@@ -1,5 +1,5 @@
-<Mod ID="InstantBuild">
-  <Compatible>2.3.5</Compatible>
+<Mod ID="BuildingTweaks">
+  <Compatible>2.4.1</Compatible>
   <Button Standard="NumPad8" ID="ShowSettings">
     <Name>
       <EN>Show settings</EN>
@@ -17,10 +17,10 @@
     </Description>
   </Button>
   <Name>
-    <EN>InstantBuild</EN>
+    <EN>BuildingTweaks</EN>
   </Name>
   <Description>
-    <EN>InstantBuild is a mod for Green Hell that allows the player to instantly build blueprints and finish the ones that are already placed. Author: OSubMarin</EN>
+    <EN>BuildingTweaks is a mod for Green Hell that allows the player to instantly build blueprints, instantly finish blueprints that are already placed, and place blueprints everywhere. Author: OSubMarin</EN>
   </Description>
-  <Version>1.0.0.4</Version>
+  <Version>1.0.0.6</Version>
 </Mod>

@@ -7,9 +7,9 @@
     <ProjectGuid>{53821041-E269-4717-BAED-3C9C6836E83F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InstantBuild</RootNamespace>
-    <AssemblyName>InstantBuild</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <RootNamespace>BuildingTweaks</RootNamespace>
+    <AssemblyName>BuildingTweaks</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -324,10 +324,11 @@
 
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConstructionGhostExtended.cs"  />
+    <Compile Include="ConstructionExtended.cs"  />
+<Compile Include="ConstructionGhostExtended.cs"  />
 <Compile Include="HUDTextChatExtended.cs"  />
 <Compile Include="HUDTextChatHistoryExtended.cs"  />
-<Compile Include="InstantBuild.cs"  />
+<Compile Include="BuildingTweaks.cs"  />
 <Compile Include="P2PSessionExtended.cs"  />
 <Compile Include="PlayerExtended.cs"  />
 <Compile Include="Properties\AssemblyInfo.cs"  />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InstantBuild
+namespace BuildingTweaks
 {
     public class P2PSessionExtended : P2PSession
     {
@@ -11,16 +11,16 @@ namespace InstantBuild
             {
                 if (!(this.GetGameVisibility() == P2PGameVisibility.Singleplayer || ReplTools.AmIMaster()) && conn != null && conn.m_Peer == this.GetSessionMaster(false))
                 {
-                    InstantBuild.WaitAMinBeforeFirstRequest = DateTime.Now.Ticks / 10000000L;
+                    BuildingTweaks.WaitAMinBeforeFirstRequest = DateTime.Now.Ticks / 10000000L;
 #if VERBOSE
                     ModAPI.Log.Write($"[{InstantBuild.ModName}:P2PSessionExtended.OnConnected] Setting initial instant build state from P2PNetworkManagerExtended.OnConnected.");
 #endif
-                    InstantBuild.SetInstantBuildInitialState();
+                    BuildingTweaks.SetInstantBuildInitialState();
                 }
             }
             catch (Exception ex)
             {
-                ModAPI.Log.Write($"[{InstantBuild.ModName}:P2PSessionExtended.OnConnected] Exception caught on connection: [{ex.ToString()}]");
+                ModAPI.Log.Write($"[{BuildingTweaks.ModName}:P2PSessionExtended.OnConnected] Exception caught on connection: [{ex.ToString()}]");
             }
         }
 
@@ -29,18 +29,18 @@ namespace InstantBuild
             try
             {
                 if (!(this.GetGameVisibility() == P2PGameVisibility.Singleplayer || ReplTools.AmIMaster()) && conn != null && conn.m_Peer == this.GetSessionMaster(false))
-                    InstantBuild.RestorePermissionStateToOrig();
+                    BuildingTweaks.RestorePermissionStateToOrig();
             }
             catch (Exception ex)
             {
-                ModAPI.Log.Write($"[{InstantBuild.ModName}:P2PSessionExtended.OnDisconnected] Exception caught on disconnection: [{ex.ToString()}]");
+                ModAPI.Log.Write($"[{BuildingTweaks.ModName}:P2PSessionExtended.OnDisconnected] Exception caught on disconnection: [{ex.ToString()}]");
             }
             base.OnDisconnected(conn);
         }
 
         public override void SendTextChatMessage(string message)
         {
-            if (!string.IsNullOrWhiteSpace(message) && message.StartsWith(InstantBuild.PermissionRequestBegin, StringComparison.InvariantCulture) && message.IndexOf(InstantBuild.PermissionRequestEnd, StringComparison.InvariantCulture) > 0)
+            if (!string.IsNullOrWhiteSpace(message) && message.StartsWith(BuildingTweaks.PermissionRequestBegin, StringComparison.InvariantCulture) && message.IndexOf(BuildingTweaks.PermissionRequestEnd, StringComparison.InvariantCulture) > 0)
                 return;
             base.SendTextChatMessage(message);
         }

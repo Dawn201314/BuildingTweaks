@@ -4,14 +4,14 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace InstantBuild
+namespace BuildingTweaks
 {
     /// <summary>
-    /// InstantBuild is a mod for Green Hell that allows the player to instantly build blueprints and finish the ones that are already placed.
+    /// BuildingTweaks is a mod for Green Hell that allows the player to instantly build blueprints and finish the ones that are already placed.
     /// Usage: Simply press the shortcut to open settings window (by default it is NumPad8).
     /// Author: OSubMarin
     /// </summary>
-    public class InstantBuild : MonoBehaviour
+    public class BuildingTweaks : MonoBehaviour
     {
         #region Enums
 
@@ -26,27 +26,27 @@ namespace InstantBuild
 
         #region Constructors/Destructor
 
-        public InstantBuild()
+        public BuildingTweaks()
         {
             Instance = this;
         }
 
-        private static InstantBuild Instance;
+        private static BuildingTweaks Instance;
 
-        public static InstantBuild Get() => InstantBuild.Instance;
+        public static BuildingTweaks Get() => BuildingTweaks.Instance;
 
         #endregion
 
         #region Attributes
 
         /// <summary>The name of this mod.</summary>
-        public static readonly string ModName = nameof(InstantBuild);
+        public static readonly string ModName = nameof(BuildingTweaks);
 
         /// <summary>Path to ModAPI runtime configuration file (contains game shortcuts).</summary>
         private static readonly string RuntimeConfigurationFile = Path.Combine(Application.dataPath.Replace("GH_Data", "Mods"), "RuntimeConfiguration.xml");
 
-        /// <summary>Path to InstantBuild mod configuration file (if it does not already exist it will be automatically created on first run).</summary>
-        private static readonly string InstantBuildConfigurationFile = Path.Combine(Application.dataPath.Replace("GH_Data", "Mods"), "InstantBuild.txt");
+        /// <summary>Path to BuildingTweaks mod configuration file (if it does not already exist it will be automatically created on first run).</summary>
+        private static readonly string BuildingTweaksConfigurationFile = Path.Combine(Application.dataPath.Replace("GH_Data", "Mods"), "BuildingTweaks.txt");
 
         /// <summary>Default shortcut to show mod settings.</summary>
         private static readonly KeyCode DefaultModKeybindingId_Settings = KeyCode.Keypad8;
@@ -75,7 +75,7 @@ namespace InstantBuild
         private static float ModScreenStartPositionX { get; set; } = Screen.width / 7f;
         private static float ModScreenStartPositionY { get; set; } = Screen.height / 7f;
 
-        public static Rect InstantBuildScreen = new Rect(ModScreenStartPositionX, ModScreenStartPositionY, ModScreenTotalWidth, ModScreenTotalHeight);
+        public static Rect BuildingTweaksScreen = new Rect(ModScreenStartPositionX, ModScreenStartPositionY, ModScreenTotalWidth, ModScreenTotalHeight);
 
         private bool IsMinimized = false;
         private bool ShowUI = false;
@@ -94,11 +94,14 @@ namespace InstantBuild
         public string BlueprintRadiusFinishFieldOrig = "20";
         public static float FinishBlueprintRadius = 20f;
 
+        public static bool BuildEverywhereEnabled { get; set; } = false; // Binded to GUILayout.Toggle
+        private bool BuildEverywhereEnabledOrig = false;
+
         // Permission attributes.
 
         public static readonly string PermissionRequestBegin = "Can I use \"";
         public static readonly string PermissionRequestEnd = "\" mod? (Host can reply \"Allowed\" to give permission)";
-        public static readonly string PermissionRequestFinal = PermissionRequestBegin + "Instant Build" + PermissionRequestEnd;
+        public static readonly string PermissionRequestFinal = PermissionRequestBegin + "Building Tweaks" + PermissionRequestEnd;
 
         public static bool DoRequestPermission = false;
         public static bool PermissionGranted = false;
@@ -117,16 +120,16 @@ namespace InstantBuild
         #region Static functions
 
         public static bool IsWithinRadius(Vector3 objA, Vector3 objB)
-            => !(objA.x < (objB.x - InstantBuild.FinishBlueprintRadius) ||
-            objA.x > (objB.x + InstantBuild.FinishBlueprintRadius) ||
-            objA.y < (objB.y - InstantBuild.FinishBlueprintRadius) ||
-            objA.y > (objB.y + InstantBuild.FinishBlueprintRadius) ||
-            objA.z < (objB.z - InstantBuild.FinishBlueprintRadius) ||
-            objA.z > (objB.z + InstantBuild.FinishBlueprintRadius));
+            => !(objA.x < (objB.x - BuildingTweaks.FinishBlueprintRadius) ||
+            objA.x > (objB.x + BuildingTweaks.FinishBlueprintRadius) ||
+            objA.y < (objB.y - BuildingTweaks.FinishBlueprintRadius) ||
+            objA.y > (objB.y + BuildingTweaks.FinishBlueprintRadius) ||
+            objA.z < (objB.z - BuildingTweaks.FinishBlueprintRadius) ||
+            objA.z > (objB.z + BuildingTweaks.FinishBlueprintRadius));
 
         private static void ShowHUDBigInfo(string text, float duration)
         {
-            string header = "Instant Build Info";
+            string header = "Building Tweaks Info";
             string textureName = HUDInfoLogTextureType.Reputation.ToString();
             HUDBigInfo obj = (HUDBigInfo)LocalHUDManager.GetHUD(typeof(HUDBigInfo));
             HUDBigInfoData.s_Duration = duration;
@@ -149,8 +152,13 @@ namespace InstantBuild
             uint readerPrePos = reader.Position;
             if (readerPrePos >= int.MaxValue) // Failsafe for uint cast to int.
                 return null;
-            string message = reader.ReadString();
-            reader.Seek(-1 * ((int)reader.Position - (int)readerPrePos));
+            string message;
+            try
+            {
+                message = reader.ReadString();
+                reader.Seek(-1 * ((int)reader.Position - (int)readerPrePos));
+            }
+            catch { message = null; }
             return message;
         }
 
@@ -159,7 +167,7 @@ namespace InstantBuild
             if (InstantBuildEnabled)
             {
                 bool isSingleplayerOrMaster = (P2PSession.Instance.GetGameVisibility() == P2PGameVisibility.Singleplayer || ReplTools.AmIMaster());
-                bool hasPermission = (InstantBuild.PermissionGranted && !InstantBuild.PermissionDenied);
+                bool hasPermission = (BuildingTweaks.PermissionGranted && !BuildingTweaks.PermissionDenied);
                 Cheats.m_InstantBuild = (isSingleplayerOrMaster || hasPermission);
 #if VERBOSE
                 if (Cheats.m_InstantBuild)
@@ -179,18 +187,18 @@ namespace InstantBuild
 
         public static void RestorePermissionStateToOrig()
         {
-            InstantBuild.OtherWaitingPermission = false;
-            InstantBuild.OtherPermissionAskTime = -1L;
-            InstantBuild.WaitingPermission = false;
-            InstantBuild.PermissionAskTime = -1L;
-            InstantBuild.WaitAMinBeforeFirstRequest = -1L;
-            InstantBuild.PermissionDenied = false;
-            InstantBuild.PermissionGranted = false;
-            InstantBuild.DoRequestPermission = false;
-            InstantBuild.NbPermissionRequests = 0;
-            Cheats.m_InstantBuild = InstantBuild.InstantBuildOrigState;
+            BuildingTweaks.OtherWaitingPermission = false;
+            BuildingTweaks.OtherPermissionAskTime = -1L;
+            BuildingTweaks.WaitingPermission = false;
+            BuildingTweaks.PermissionAskTime = -1L;
+            BuildingTweaks.WaitAMinBeforeFirstRequest = -1L;
+            BuildingTweaks.PermissionDenied = false;
+            BuildingTweaks.PermissionGranted = false;
+            BuildingTweaks.DoRequestPermission = false;
+            BuildingTweaks.NbPermissionRequests = 0;
+            Cheats.m_InstantBuild = BuildingTweaks.InstantBuildOrigState;
 #if VERBOSE
-            ModAPI.Log.Write($"[{InstantBuild.ModName}:RestorePermissionStateToOrig] Restored initial instant build state to {(InstantBuild.InstantBuildOrigState ? "true" : "false")}.");
+            ModAPI.Log.Write($"[{BuildingTweaks.ModName}:RestorePermissionStateToOrig] Restored initial instant build state to {(BuildingTweaks.InstantBuildOrigState ? "true" : "false")}.");
 #endif
         }
 
@@ -198,31 +206,31 @@ namespace InstantBuild
         {
             try
             {
-                if (!InstantBuild.PermissionDenied && !InstantBuild.PermissionGranted && net_msg.m_MsgType == 10 && net_msg.m_ChannelId == 1)
+                if (!BuildingTweaks.PermissionDenied && !BuildingTweaks.PermissionGranted && net_msg.m_MsgType == 10 && net_msg.m_ChannelId == 1)
                 {
                     bool peerIsMaster = net_msg.m_Connection.m_Peer.IsMaster();
                     if (!peerIsMaster)
                     {
                         string message = ReadNetMessage(net_msg.m_Reader);
-                        if (!string.IsNullOrWhiteSpace(message) && message.StartsWith(InstantBuild.PermissionRequestBegin, StringComparison.InvariantCulture) && message.IndexOf(InstantBuild.PermissionRequestEnd, StringComparison.InvariantCultureIgnoreCase) > 0)
+                        if (!string.IsNullOrWhiteSpace(message) && message.StartsWith(BuildingTweaks.PermissionRequestBegin, StringComparison.InvariantCulture) && message.IndexOf(BuildingTweaks.PermissionRequestEnd, StringComparison.InvariantCultureIgnoreCase) > 0)
                         {
-                            InstantBuild.OtherPermissionAskTime = DateTime.Now.Ticks / 10000000L;
-                            InstantBuild.OtherWaitingPermission = true;
+                            BuildingTweaks.OtherPermissionAskTime = DateTime.Now.Ticks / 10000000L;
+                            BuildingTweaks.OtherWaitingPermission = true;
                         }
                     }
-                    if (!InstantBuild.OtherWaitingPermission && InstantBuild.WaitingPermission && peerIsMaster)
+                    if (!BuildingTweaks.OtherWaitingPermission && BuildingTweaks.WaitingPermission && peerIsMaster)
                     {
                         string message = ReadNetMessage(net_msg.m_Reader);
                         if (!string.IsNullOrWhiteSpace(message) && string.Compare(message, "Allowed", true, CultureInfo.InvariantCulture) == 0)
                         {
-                            InstantBuild.WaitingPermission = false;
-                            InstantBuild.PermissionAskTime = -1L;
-                            InstantBuild.PermissionGranted = true;
-                            ShowHUDInfo("Host gave you permission to use \"Instant Build\" mod.");
+                            BuildingTweaks.WaitingPermission = false;
+                            BuildingTweaks.PermissionAskTime = -1L;
+                            BuildingTweaks.PermissionGranted = true;
+                            ShowHUDInfo("Host gave you permission to use \"Building Tweaks\" mod.");
 #if VERBOSE
                             ModAPI.Log.Write($"[{ModName}:TextChatRecv] Setting initial instant build state from TextChatRecv.");
 #endif
-                            InstantBuild.SetInstantBuildInitialState();
+                            BuildingTweaks.SetInstantBuildInitialState();
                         }
                     }
                 }
@@ -293,8 +301,8 @@ namespace InstantBuild
             try
             {
                 string radiusStr = Convert.ToString((int)FinishBlueprintRadius, CultureInfo.InvariantCulture);
-                File.WriteAllText(InstantBuildConfigurationFile, $"InstantBuildFeatureEnabled={(InstantBuildEnabled ? "true" : "false")}\r\nFinishBlueprintsShortcutEnabled={(FinishBlueprintsEnabled ? "true" : "false")}\r\nFinishBlueprintsRadius={radiusStr}\r\n", Encoding.UTF8);
-                ModAPI.Log.Write($"[{ModName}:SaveSettings] Configuration saved (Instant build feature: {(InstantBuildEnabled ? "enabled" : "disabled")}. Finish blueprints shortcut: {(FinishBlueprintsEnabled ? "enabled" : "disabled")}. Finish blueprints radius: {radiusStr} meters).");
+                File.WriteAllText(BuildingTweaksConfigurationFile, $"InstantBuildFeatureEnabled={(InstantBuildEnabled ? "true" : "false")}\r\nFinishBlueprintsShortcutEnabled={(FinishBlueprintsEnabled ? "true" : "false")}\r\nFinishBlueprintsRadius={radiusStr}\r\nBuildEverywhereFeatureEnabled={(BuildEverywhereEnabled ? "true" : "false")}\r\n", Encoding.UTF8);
+                ModAPI.Log.Write($"[{ModName}:SaveSettings] Configuration saved (Instant build feature: {(InstantBuildEnabled ? "enabled" : "disabled")}. Finish blueprints shortcut: {(FinishBlueprintsEnabled ? "enabled" : "disabled")}. Finish blueprints radius: {radiusStr} meters. Build everywhere feature: {(BuildEverywhereEnabled ? "enabled" : "disabled")}).");
             }
             catch (Exception ex)
             {
@@ -304,7 +312,7 @@ namespace InstantBuild
 
         private void LoadSettings()
         {
-            if (!File.Exists(InstantBuildConfigurationFile))
+            if (!File.Exists(BuildingTweaksConfigurationFile))
             {
                 ModAPI.Log.Write($"[{ModName}:LoadSettings] Configuration file was not found, creating it.");
                 SaveSettings();
@@ -315,7 +323,7 @@ namespace InstantBuild
                 string[] lines = null;
                 try
                 {
-                    lines = File.ReadAllLines(InstantBuildConfigurationFile, Encoding.UTF8);
+                    lines = File.ReadAllLines(BuildingTweaksConfigurationFile, Encoding.UTF8);
                 }
                 catch (Exception ex)
                 {
@@ -327,6 +335,7 @@ namespace InstantBuild
                     bool instantBuildFound = false;
                     bool finishBlueprintsFound = false;
                     bool radiusFound = false;
+                    bool buildEverywhereFound = false;
 
                     foreach (string line in lines)
                         if (!string.IsNullOrWhiteSpace(line))
@@ -334,30 +343,14 @@ namespace InstantBuild
                             if (line.StartsWith("InstantBuildFeatureEnabled="))
                             {
                                 instantBuildFound = true;
-                                if (line.Contains("true", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    InstantBuildEnabled = true;
-                                    InstantBuildEnabledOrig = true;
-                                }
-                                else
-                                {
-                                    InstantBuildEnabled = false;
-                                    InstantBuildEnabledOrig = false;
-                                }
+                                InstantBuildEnabled = line.Contains("true", StringComparison.InvariantCultureIgnoreCase);
+                                InstantBuildEnabledOrig = InstantBuildEnabled;
                             }
                             else if (line.StartsWith("FinishBlueprintsShortcutEnabled="))
                             {
                                 finishBlueprintsFound = true;
-                                if (line.Contains("true", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    FinishBlueprintsEnabled = true;
-                                    FinishBlueprintsEnabledOrig = true;
-                                }
-                                else
-                                {
-                                    FinishBlueprintsEnabled = false;
-                                    FinishBlueprintsEnabledOrig = false;
-                                }
+                                FinishBlueprintsEnabled = line.Contains("true", StringComparison.InvariantCultureIgnoreCase);
+                                FinishBlueprintsEnabledOrig = FinishBlueprintsEnabled;
                             }
                             else if (line.StartsWith("FinishBlueprintsRadius=") && line.Length > "FinishBlueprintsRadius=".Length)
                             {
@@ -372,6 +365,12 @@ namespace InstantBuild
                                 else
                                     ModAPI.Log.Write($"[{ModName}:LoadSettings] Warning: Finish blueprint radius value was not correct (it must be between 1 and 2000000).");
                             }
+                            else if (line.StartsWith("BuildEverywhereFeatureEnabled="))
+                            {
+                                buildEverywhereFound = true;
+                                BuildEverywhereEnabled = line.Contains("true", StringComparison.InvariantCultureIgnoreCase);
+                                BuildEverywhereEnabledOrig = BuildEverywhereEnabled;
+                            }
                         }
 
                     if (instantBuildFound)
@@ -379,16 +378,16 @@ namespace InstantBuild
 #if VERBOSE
                         ModAPI.Log.Write($"[{ModName}:LoadSettings] Setting initial instant build state from LoadSettings.");
 #endif
-                        InstantBuild.SetInstantBuildInitialState();
+                        BuildingTweaks.SetInstantBuildInitialState();
                     }
-                    if (instantBuildFound && finishBlueprintsFound && radiusFound)
+                    if (instantBuildFound && finishBlueprintsFound && radiusFound && buildEverywhereFound)
                         ModAPI.Log.Write($"[{ModName}:LoadSettings] Successfully parsed configuration file.");
                     else
-                        ModAPI.Log.Write($"[{ModName}:LoadSettings] Warning: Parsed configuration file but some values were missing (Found instant build: {(instantBuildFound ? "true" : "false")}. Found finish blueprints: {(finishBlueprintsFound ? "true" : "false")}. Found radius: {(radiusFound ? "true" : "false")}).");
+                        ModAPI.Log.Write($"[{ModName}:LoadSettings] Warning: Parsed configuration file but some values were missing (Found instant build: {(instantBuildFound ? "true" : "false")}. Found finish blueprints: {(finishBlueprintsFound ? "true" : "false")}. Found radius: {(radiusFound ? "true" : "false")}). Found build everywhere: {(buildEverywhereFound ? "true" : "false")}).");
                 }
                 else
                     ModAPI.Log.Write($"[{ModName}:LoadSettings] Warning: Configuration file was empty. Using default values.");
-                ModAPI.Log.Write($"[{ModName}:LoadSettings] Instant build feature: {(InstantBuildEnabled ? "enabled" : "disabled")}. Finish blueprints shortcut: {(FinishBlueprintsEnabled ? "enabled" : "disabled")}. Finish blueprints radius: {Convert.ToString((int)FinishBlueprintRadius, CultureInfo.InvariantCulture)} meters.");
+                ModAPI.Log.Write($"[{ModName}:LoadSettings] Instant build feature: {(InstantBuildEnabled ? "enabled" : "disabled")}. Finish blueprints shortcut: {(FinishBlueprintsEnabled ? "enabled" : "disabled")}. Finish blueprints radius: {Convert.ToString((int)FinishBlueprintRadius, CultureInfo.InvariantCulture)} meters. Build everywhere feature: {(BuildEverywhereEnabled ? "enabled" : "disabled")}.");
             }
         }
 
@@ -399,10 +398,10 @@ namespace InstantBuild
         private void InitWindow()
         {
             int wid = GetHashCode();
-            InstantBuildScreen = GUILayout.Window(wid,
-                InstantBuildScreen,
-                InitInstantBuildScreen,
-                "Instant Build mod v1.0.0.2, by OSubMarin",
+            BuildingTweaksScreen = GUILayout.Window(wid,
+                BuildingTweaksScreen,
+                InitBuildingTweaksScreen,
+                "Building Tweaks mod v1.0.0.6, by OSubMarin",
                 GUI.skin.window,
                 GUILayout.ExpandWidth(true),
                 GUILayout.MinWidth(ModScreenMinWidth),
@@ -418,10 +417,10 @@ namespace InstantBuild
             LocalPlayer = Player.Get();
         }
 
-        private void InitInstantBuildScreen(int windowID)
+        private void InitBuildingTweaksScreen(int windowID)
         {
-            ModScreenStartPositionX = InstantBuildScreen.x;
-            ModScreenStartPositionY = InstantBuildScreen.y;
+            ModScreenStartPositionX = BuildingTweaksScreen.x;
+            ModScreenStartPositionY = BuildingTweaksScreen.y;
 
             using (var modContentScope = new GUILayout.VerticalScope(GUI.skin.box))
             {
@@ -434,17 +433,17 @@ namespace InstantBuild
 
         private void ScreenMenuBox()
         {
-            if (GUI.Button(new Rect(InstantBuildScreen.width - 40f, 0f, 20f, 20f), "-", GUI.skin.button))
+            if (GUI.Button(new Rect(BuildingTweaksScreen.width - 40f, 0f, 20f, 20f), "-", GUI.skin.button))
                 CollapseWindow();
 
-            if (GUI.Button(new Rect(InstantBuildScreen.width - 20f, 0f, 20f, 20f), "X", GUI.skin.button))
+            if (GUI.Button(new Rect(BuildingTweaksScreen.width - 20f, 0f, 20f, 20f), "X", GUI.skin.button))
                 CloseWindow();
         }
 
         private void ModOptionsBox()
         {
             bool isSingleplayerOrMaster = (P2PSession.Instance.GetGameVisibility() == P2PGameVisibility.Singleplayer || ReplTools.AmIMaster());
-            bool hasPermission = (InstantBuild.PermissionGranted && !InstantBuild.PermissionDenied);
+            bool hasPermission = (BuildingTweaks.PermissionGranted && !BuildingTweaks.PermissionDenied);
             if (isSingleplayerOrMaster || hasPermission)
             {
                 using (var optionsScope = new GUILayout.VerticalScope(GUI.skin.box))
@@ -541,23 +540,49 @@ namespace InstantBuild
                                 }
                             }
                     }
+
+                    GUILayout.Space(15f);
+                    BuildEverywhereEnabled = GUILayout.Toggle(BuildEverywhereEnabled, "Enable \"build everywhere\" feature?", GUI.skin.toggle);
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("This allows you to build everywhere (removes construction's constraints).", descriptionStyle);
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                    if (BuildEverywhereEnabled != BuildEverywhereEnabledOrig)
+                    {
+                        BuildEverywhereEnabledOrig = BuildEverywhereEnabled;
+                        if (BuildEverywhereEnabled)
+                        {
+                            ShowHUDInfo("Build everywhere feature enabled.", 4f);
+#if VERBOSE
+                            ModAPI.Log.Write($"[{ModName}:ModOptionsBox] Build everywhere feature has been enabled.");
+#endif
+                        }
+                        else
+                        {
+                            ShowHUDInfo("Build everywhere feature disabled.", 4f, Color.yellow);
+#if VERBOSE
+                            ModAPI.Log.Write($"[{ModName}:ModOptionsBox] Build everywhere feature has been disabled.");
+#endif
+                        }
+                        SaveSettings();
+                    }
                 }
             }
             else
             {
                 using (var optionsScope = new GUILayout.VerticalScope(GUI.skin.box))
                 {
-                    if (!hasPermission && InstantBuild.NbPermissionRequests >= 3)
+                    if (!hasPermission && BuildingTweaks.NbPermissionRequests >= 3)
                     {
                         GUI.color = Color.yellow;
-                        GUILayout.Label("Host did not reply to your permission requests or has denied permission to use Instant Build mod.", GUI.skin.label);
+                        GUILayout.Label("Host did not reply to your permission requests or has denied permission to use Building Tweaks mod.", GUI.skin.label);
                         GUI.color = DefaultGuiColor;
                     }
                     else
                     {
-                        GUILayout.Label("It seems that you are not the host. You can ask permission to use Instant Build mod with the button below:", GUI.skin.label);
+                        GUILayout.Label("It seems that you are not the host. You can ask permission to use Building Tweaks mod with the button below:", GUI.skin.label);
                         if (GUILayout.Button("Ask permission", GUI.skin.button, GUILayout.MinWidth(120f)))
-                            InstantBuild.DoRequestPermission = true;
+                            BuildingTweaks.DoRequestPermission = true;
                     }
                 }
             }
@@ -567,9 +592,9 @@ namespace InstantBuild
         {
             IsMinimized = !IsMinimized;
             if (IsMinimized)
-                InstantBuildScreen = new Rect(ModScreenStartPositionX, ModScreenStartPositionY, ModScreenTotalWidth, ModScreenMinHeight);
+                BuildingTweaksScreen = new Rect(ModScreenStartPositionX, ModScreenStartPositionY, ModScreenTotalWidth, ModScreenMinHeight);
             else
-                InstantBuildScreen = new Rect(ModScreenStartPositionX, ModScreenStartPositionY, ModScreenTotalWidth, ModScreenTotalHeight);
+                BuildingTweaksScreen = new Rect(ModScreenStartPositionX, ModScreenStartPositionY, ModScreenTotalWidth, ModScreenTotalHeight);
             InitWindow();
         }
 
@@ -607,9 +632,9 @@ namespace InstantBuild
             GetGameHandles();
             ModKeybindingId_Settings = GetConfigurableKey("ShowSettings", DefaultModKeybindingId_Settings);
             ModKeybindingId_Finish = GetConfigurableKey("FinishBlueprints", DefaultModKeybindingId_Finish);
-            InstantBuild.InstantBuildOrigState = Cheats.m_InstantBuild;
+            BuildingTweaks.InstantBuildOrigState = Cheats.m_InstantBuild;
 #if VERBOSE
-            ModAPI.Log.Write($"[{ModName}:PlayerExtended.Start] Saved initial instant build state ({(InstantBuild.InstantBuildOrigState ? "true" : "false")}).");
+            ModAPI.Log.Write($"[{ModName}:PlayerExtended.Start] Saved initial instant build state ({(BuildingTweaks.InstantBuildOrigState ? "true" : "false")}).");
 #endif
             LoadSettings();
             ModAPI.Log.Write($"[{ModName}:Start] {ModName} initialized.");
@@ -617,7 +642,7 @@ namespace InstantBuild
 
         private void OnDestroy()
         {
-            InstantBuild.RestorePermissionStateToOrig();
+            BuildingTweaks.RestorePermissionStateToOrig();
         }
 
         private void OnGUI()
@@ -643,26 +668,26 @@ namespace InstantBuild
                 if (!ShowUI)
                     EnableCursor(false);
             }
-            if (!(P2PSession.Instance.GetGameVisibility() == P2PGameVisibility.Singleplayer || ReplTools.AmIMaster() || InstantBuild.PermissionDenied || InstantBuild.PermissionGranted))
+            if (!(P2PSession.Instance.GetGameVisibility() == P2PGameVisibility.Singleplayer || ReplTools.AmIMaster() || BuildingTweaks.PermissionDenied || BuildingTweaks.PermissionGranted))
             {
                 long currTime = DateTime.Now.Ticks / 10000000L;
-                if (InstantBuild.WaitingPermission)
+                if (BuildingTweaks.WaitingPermission)
                 {
-                    if ((currTime - InstantBuild.PermissionAskTime) > 56L)
+                    if ((currTime - BuildingTweaks.PermissionAskTime) > 56L)
                     {
-                        if (InstantBuild.NbPermissionRequests >= 3)
-                            InstantBuild.PermissionDenied = true;
-                        InstantBuild.WaitingPermission = false;
-                        InstantBuild.PermissionAskTime = -1L;
-                        ShowHUDInfo($"Host did not reply to your permission request{(InstantBuild.PermissionDenied ? "" : ", please try again")}.", 6f, Color.yellow);
+                        if (BuildingTweaks.NbPermissionRequests >= 3)
+                            BuildingTweaks.PermissionDenied = true;
+                        BuildingTweaks.WaitingPermission = false;
+                        BuildingTweaks.PermissionAskTime = -1L;
+                        ShowHUDInfo($"Host did not reply to your permission request{(BuildingTweaks.PermissionDenied ? "" : ", please try again")}.", 6f, Color.yellow);
                     }
                 }
-                if (InstantBuild.OtherWaitingPermission)
+                if (BuildingTweaks.OtherWaitingPermission)
                 {
-                    if ((currTime - InstantBuild.OtherPermissionAskTime) > 59L)
+                    if ((currTime - BuildingTweaks.OtherPermissionAskTime) > 59L)
                     {
-                        InstantBuild.OtherWaitingPermission = false;
-                        InstantBuild.OtherPermissionAskTime = -1L;
+                        BuildingTweaks.OtherWaitingPermission = false;
+                        BuildingTweaks.OtherPermissionAskTime = -1L;
                     }
                 }
             }

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("InstantBuild")]
-[assembly: AssemblyDescription("InstantBuild is a mod for Green Hell that allows the player to instantly construct blueprints and finish the ones that are already placed.")]
+[assembly: AssemblyTitle("BuildingTweaks")]
+[assembly: AssemblyDescription("BuildingTweaks is a mod for Green Hell that allows the player to instantly build blueprints, instantly finish blueprints that are already placed, and place blueprints everywhere.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("[Legendary Codings] OSubMarin")]
-[assembly: AssemblyProduct("InstantBuild")]
-[assembly: AssemblyCopyright("Copyright © 2022 - All rights reserved")]
+[assembly: AssemblyCompany("LC-IT S. (OSubMarin)")]
+[assembly: AssemblyProduct("BuildingTweaks")]
+[assembly: AssemblyCopyright("Copyright © 2022-2023 - All rights reserved")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Numéro de build
 //      Révision
 //
-[assembly: AssemblyVersion("1.0.0.4")]
-[assembly: AssemblyFileVersion("1.0.0.4")]
+[assembly: AssemblyVersion("1.0.0.6")]
+[assembly: AssemblyFileVersion("1.0.0.6")]

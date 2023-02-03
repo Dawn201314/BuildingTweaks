@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-namespace InstantBuild
+namespace BuildingTweaks
 {
     public class PlayerExtended : Player
     {
         protected override void Start()
         {
             base.Start();
-            new GameObject("__InstantBuildMod__").AddComponent<InstantBuild>();
+            new GameObject("__InstantBuildMod__").AddComponent<BuildingTweaks>();
         }
     }
 }
