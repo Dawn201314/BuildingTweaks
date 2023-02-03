@@ -29,7 +29,7 @@ If the host does not have ModAPI it will also work.
 ----
 
 ## Changelogs
-__v1.0.0.6__: Renamed mod to "Building Tweaks" and added "build everywhere" feature.
+__v1.0.0.6__: Renamed mod to "Building Tweaks" and added "build everywhere" feature.<br>
 __v1.0.0.5__: Now works with latest Green Hell update (Building update).<br>
 __v1.0.0.4__: It is now possible to enable "Instant build" feature and "Finish blueprints" shortcut at the same time.<br>
 __v1.0.0.2__: Now works in multiplayer when you are not the host.
