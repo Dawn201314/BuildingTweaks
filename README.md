@@ -5,7 +5,7 @@ __Building Tweaks__ is a mod for __Green Hell__ that allows the player to instan
 
 ----
 
-## Install
+## Installation
 ### If you already have ModAPI installed:
 Copy the .mod file inside directory "__[...]/modapi/mods/GH/__". Then launch __ModAPI.exe__, select "BuildingTweaks" in the left menu and click "Launch the game".
 
