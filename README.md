@@ -44,7 +44,7 @@ __v1.0.0.2__: Now works in multiplayer when you are not the host.
 ----
 
 ## Contributors
-Big thanks to slik/P for mod testing, and to Moritz for creating the "build everywhere" feature.
+Big thanks to **slik/P** for mod testing, and to **Moritz** for creating the "build everywhere" feature.
 
 ----
 
