@@ -3,24 +3,30 @@
   <Button Standard="NumPad8" ID="ShowSettings">
     <Name>
       <EN>Show settings</EN>
+      <ZH>打开设置界面</ZH>
     </Name>
     <Description>
       <EN>This shortcut displays the settings window.</EN>
+      <ZH>这个快捷键可以打开设置界面。</ZH>
     </Description>
   </Button>
   <Button Standard="NumPad9" ID="FinishBlueprints">
     <Name>
       <EN>Finish blueprints</EN>
+      <ZH>建造蓝图</ZH>
     </Name>
     <Description>
       <EN>This shortcut instantly builds existing blueprints nearby (within a 20 meters radius by default).</EN>
+      <ZH>这个快捷键可以立即完成周围半径20米范围内所有蓝图的建造。</ZH>
     </Description>
   </Button>
   <Name>
     <EN>BuildingTweaks</EN>
+    <ZH>建筑大师</ZH>
   </Name>
   <Description>
     <EN>BuildingTweaks is a mod for Green Hell that allows the player to instantly build blueprints, instantly finish blueprints that are already placed, and place blueprints everywhere. Author: OSubMarin</EN>
+    <ZH>“建筑大师”是专为《绿色地狱》开发的模组，通过它玩家的蓝图可以立马完成而无需任何材料，并且能够在游戏的任意位置放置蓝图。该模组由OSubMarin制作。</ZH>
   </Description>
   <Version>1.0.0.6</Version>
 </Mod>
